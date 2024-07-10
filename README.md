@@ -1,29 +1,34 @@
 
-# ASCII-ART
+# ASCII-ART-OUTPUT
 
-A command-line tool that converts text input into ASCII art representations. Utilizing a collection of standard ASCII characters, the program transforms text input into visually appealing designs. Users can generate ASCII art banners enhancing text-based communication with creative visuals.
+A command-line tool that converts text input into `ASCII` art representations. Utilizing a collection of standard  `ASCII` characters, the program transforms text input into visually appealing designs and prints them in a textfile. Users can generate `ASCII` art banners enhancing text-based communication with creative visuals.
 
 
 ## Installation
 
-Prerequisites:
+#### Prerequisites:
 
-Go 1.18 or higher installed
+`Go 1.18` or higher installed
+
 Git installed
-Operating System: Windows, macOS, Linux
+Operating System: `Windows`, `macOS`, `Linux`
 
-Download/Clone:
-```
-$ git clone https://learn.zone01kisumu.ke/git/cowalla/ascii-art
+#### Download/Clone:
+```bash
+
+$ git clone https://github.com/Cherrypick14/ascii-art-output
+
 ```
 
-Preconditions:
-```
-If you encounter any issues, make sure your input text contains only ASCII characters (32 to 126). Non-ASCII characters are not supported. The number of arguments must be strictly 2 for the program to work. The standard.txt file must not be empty for the program to work.
+## Preconditions:
+
+If you encounter any issues, make sure your input text contains only `ASCII` characters (32 to 126). Non-ASCII characters are not supported. The length of arguments can be 2, 3 or 4 for the program to work. The standard.txt file must not be empty for the program to work.
+
+Banner file: `standard`, `shadow` or `thinkertoy`
 
 Error: Input contains non-ASCII characters
 
-```
+
 
 ## Features
 
@@ -35,34 +40,28 @@ Error: Input contains non-ASCII characters
 
 - Error Handling: It includes error handling mechanisms to handle incorrect input or file reading errors gracefully. For example, it checks for incorrect number of command-line arguments and file reading errors.
 
-- File Reading: It reads content from a file named "standard.txt" to generate ASCII art. This indicates the ability to read external resources or files for generating art. By default, this program reads content from the standard.txt file. You can also replace standard.txt with shadow.txt and thinkertoy.txt files in the program.
+- File Reading: It reads content from a banner files  (`standard.txt`, `shadow.txt` or `thinkertoy.txt`) to generate ASCII art. You can also replace standard.txt with shadow.txt and thinkertoy.txt files in the program.
 
-- ASCII Art Generation: It generates ASCII art based on the input text and the contents of the "standard.txt" file. The specifics of how the ASCII art is generated would depend on the implementation details within the ascii.AsciiArt function, which is likely contained in the ascii package imported in your code.
+- ASCII Art Generation: It generates ASCII art based on the input text and the contents of the "standard.txt" file. The specifics of how the ASCII art is generated would depend on the ascii.AsciiArt function.
 
-- Output Display: It displays the generated ASCII art to the user, typically in the terminal or command prompt where the tool is executed.
+- Output Display: It prints the generated ASCII art to the output file chosen, for display after the tool is executed.
 
 
-## Usage/Examples
-
-```golang
-import ascii/ascii
-
-func main() {
-  ascii.AsciiArt(words, contents2)
-}
-```
-
-## Executing program
+##  Usage
 
 To run the program, navigate to the directory where the program is installed and use the following command:
 
-``` go run main.go "Your Text Here" ```
+```go
+ go run . "Your Text Here" 
+ go run . --output=banner.txt "Your Text Here"
+ go run . --output=banner.txt "Your Text Here" standard 
+```
 
-Replace "Your Text Here" with the text you want to convert into ASCII art.
+Replace `"Your Text Here"` with the text you want to convert into ASCII art, and use `standard`, `shadow` or `thinkertoy` for the banner file you want.
 
 ## Running Tests
 
-To run tests, run the following command
+To run tests, navigate to the ascii directory and  run the following command
 
 ```bash
   go test -v
@@ -73,15 +72,10 @@ To run tests, run the following command
 [MIT](https://choosealicense.com/licenses/mit/)
 
 
-## Demo
-
-https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExam4wOTZzdmJmOHIzNGFpbTZsOWhsdm95YndzcWYxaGRoeTV4YmN2NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JHlHhoAkrA7pDqAItE/giphy.gif
-
-
 ## Authors
 
-- [@cowalla](https://learn.zone01kisumu.ke/git/cowalla)
+- [@Cherrypick14](https://github.com/Cherrypick14)
 
-- [@mombewa](https://learn.zone01kisumu.ke/git/mombewa)
+- [@MauriceOmbewa](https://github.com/MauriceOmbewa)
 
-- [@skisenge](https://learn.zone01kisumu.ke/git/skisenge)
+- [@stkisengese](https://github.com/stkisengese)
