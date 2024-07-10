@@ -9,93 +9,82 @@ import (
 )
 
 func main() {
-	if  len(os.Args) != 4 {
-		fmt.Println("Usage: go run . --output=<fileName.txt> [STRING] [BANNER]")
+	if len(os.Args) < 2 || len(os.Args) > 4 {
+		fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --output=<fileName.txt> something standard")
 		return
 	}
-
-	outputFileName, inputText, banner, err := parseArgs(os.Args)
-	if err != nil {
-		fmt.Println(err)
-		return
+	// Grab string to generate Ascii represatantion.
+	inputText := os.Args[1]
+	if len(os.Args) >= 3 && len(os.Args) <= 4 {
+		inputText = os.Args[2]
 	}
-
-	if inputText == "\\n" {
-		fmt.Print("\n")
+	switch inputText {
+	case "":
 		return
-	}
-
-	if inputText == "\\a" || inputText == "\\0" || inputText == "\\f" || inputText == "\\v" || inputText == "\\r" {
-		fmt.Println("Error: Non-printable character", inputText)
+	case "\\a", "\\0", "\\f", "\\v", "\\r":
+		fmt.Println("Error: Non printable character", inputText)
 		return
 	}
 
 	inputText = strings.ReplaceAll(inputText, "\\t", "    ")
 	inputText = strings.ReplaceAll(inputText, "\\b", "\b")
-
+	inputText = strings.ReplaceAll(inputText, "\\n", "\n")
+	// Logic process for handlng the backspace.
 	for i := 0; i < len(inputText); i++ {
-		indexb := strings.Index(inputText, "\b")
-		if indexb > 0 {
-			inputText = inputText[:indexb-1] + inputText[indexb+1:]
+		indexB := strings.Index(inputText, "\b")
+		if indexB > 0 {
+			inputText = inputText[:indexB-1] + inputText[indexB+1:]
 		}
 	}
+	// Split our input text to a string slice and separate with a newline.
+	words := strings.Split(inputText, "\n")
 
-	words := strings.Split(inputText, "\\n")
-
+	// setting the bannerfile to be used according to user input.
+	banner := "standard"
+	if len(os.Args) == 4 {
+		banner = strings.ToLower(os.Args[3])
+	}
 	bannerFile := banner + ".txt"
 
-	contents, err := os.ReadFile(bannerFile)
+	// Read the contents of banner file.
+	bannerText, err := os.ReadFile(bannerFile)
 	if err != nil {
 		fmt.Println("Error reading from file:", err)
 		return
 	}
+	// Confirm file information.
+	fileInfo, err := os.Stat(bannerFile)
+	if err != nil {
+		fmt.Println("Error reading file information", err)
+		return
+	}
+	fileSize := fileInfo.Size()
 
-	contents2 := strings.Split(string(contents), "\n")
+	if fileSize == 6623 || fileSize == 4702 || fileSize == 7462 {
+		// Split the content to a string slice and separate with newline.
+		contents := strings.Split(string(bannerText), "\n")
 
-	output := ascii.AsciiArt(words, contents2)
+		outputfilename := "banner.txt"
+		if len(os.Args) == 3 || len(os.Args) == 4 {
+			outputfilename = os.Args[1]
+			if strings.HasPrefix(outputfilename, "--output=") && strings.HasSuffix(outputfilename, ".txt") {
+				outputfilename = os.Args[1]
+				outputfilename = outputfilename[9:]
+			} else {
+				fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --output=<fileName.txt> something standard")
+				return
+			}
+		}
 
-	if outputFileName != "" {
-		err := writeToFile(outputFileName, output)
+		// Call the AsciiArt function for the returned string.
+		asciiArt := ascii.AsciiArt(words, contents)
+		err := os.WriteFile(outputfilename, []byte(asciiArt), 0o644)
 		if err != nil {
-			fmt.Println("Error writing to file:", err)
+			fmt.Println("Failed to write to file", err)
 			return
 		}
 	} else {
-		fmt.Println(output)
+		fmt.Println("Error with the file size", fileSize)
+		return
 	}
-}
-
-func parseArgs(args []string) (string, string, string, error) {
-	var outputFileName, inputText, banner string
-
-	for _, arg := range args[1:] {
-		if strings.HasPrefix(arg, "--output=") {
-			parts := strings.SplitN(arg, "=", 2)
-			if len(parts) != 2 || parts[1] == "" {
-				return "", "", "", fmt.Errorf("Usage: go run . --output=<fileName.txt> [STRING] [BANNER]")
-			}
-			outputFileName = parts[1]
-		} else if inputText == "" {
-			inputText = arg
-		} else {
-			banner = arg
-		}
-	}
-
-	if inputText == "" || banner == "" {
-		return "", "", "", fmt.Errorf("Usage: go run . --output=<fileName.txt> [STRING] [BANNER]")
-	}
-
-	return outputFileName, inputText, banner, nil
-}
-
-func writeToFile(fileName, content string) error {
-	file, err := os.Create(fileName)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	_, err = file.WriteString(content)
-	return err
 }
